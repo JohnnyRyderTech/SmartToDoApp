@@ -17,7 +17,6 @@
   --warning: #d6a94f;
   --success: #8fa876;
 
-  /* Prioriteettivärit */
   --priority-low: #6f9f70;
   --priority-low-bg: rgba(111, 159, 112, 0.16);
 
@@ -39,12 +38,10 @@ body {
   margin: 0;
   color: var(--text-main);
   font-family: "Segoe UI", Arial, sans-serif;
-
   background:
     linear-gradient(rgba(10, 15, 11, 0.86), rgba(10, 15, 11, 0.94)),
     url("../images/background.jpg"),
     radial-gradient(circle at top left, #33482f, #101812 65%);
-
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -158,6 +155,25 @@ h1 {
   color: #ffd0c8;
 }
 
+.history-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.history-btn {
+  border: 1px solid rgba(194, 162, 107, 0.5);
+  color: var(--wood-light);
+  border-radius: 14px;
+  padding: 10px 18px;
+}
+
+.history-btn:hover {
+  background-color: rgba(194, 162, 107, 0.16);
+  color: #f3d69a;
+}
+
 .filter-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -230,20 +246,17 @@ h1 {
 
 .task-item.priority-low {
   border-left-color: var(--priority-low);
-  background:
-    linear-gradient(90deg, var(--priority-low-bg), rgba(25, 37, 27, 0.96) 28%);
+  background: linear-gradient(90deg, var(--priority-low-bg), rgba(25, 37, 27, 0.96) 28%);
 }
 
 .task-item.priority-normal {
   border-left-color: var(--priority-normal);
-  background:
-    linear-gradient(90deg, var(--priority-normal-bg), rgba(25, 37, 27, 0.96) 28%);
+  background: linear-gradient(90deg, var(--priority-normal-bg), rgba(25, 37, 27, 0.96) 28%);
 }
 
 .task-item.priority-high {
   border-left-color: var(--priority-high);
-  background:
-    linear-gradient(90deg, var(--priority-high-bg), rgba(25, 37, 27, 0.96) 28%);
+  background: linear-gradient(90deg, var(--priority-high-bg), rgba(25, 37, 27, 0.96) 28%);
 }
 
 .task-item.completed {
@@ -291,19 +304,23 @@ h1 {
 }
 
 .badge-low {
-  background-color: #9db88a;
+  background-color: var(--priority-low);
+  color: #101812;
 }
 
 .badge-normal {
-  background-color: var(--wood-light);
+  background-color: var(--priority-normal);
+  color: #101812;
 }
 
 .badge-high {
-  background-color: #d88b79;
+  background-color: var(--priority-high);
+  color: #101812;
 }
 
 .badge-reminded {
   background-color: #b7b1a1;
+  color: #101812;
 }
 
 .delete-btn {
@@ -338,6 +355,46 @@ h1 {
   color: var(--text-muted);
 }
 
+.history-list {
+  max-height: 430px;
+  overflow-y: auto;
+  text-align: left;
+  padding-right: 6px;
+}
+
+.history-item {
+  background: rgba(16, 24, 18, 0.72);
+  border: 1px solid rgba(183, 200, 154, 0.18);
+  border-left: 5px solid var(--green-main);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.history-item.priority-low {
+  border-left-color: var(--priority-low);
+}
+
+.history-item.priority-normal {
+  border-left-color: var(--priority-normal);
+}
+
+.history-item.priority-high {
+  border-left-color: var(--priority-high);
+}
+
+.history-item h4 {
+  color: var(--text-main);
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.history-item p {
+  color: var(--text-muted);
+  margin: 4px 0;
+  font-size: 0.9rem;
+}
+
 .swal2-popup {
   background: #1d2b20 !important;
   color: var(--text-main) !important;
@@ -351,6 +408,10 @@ h1 {
 .swal2-confirm {
   background-color: var(--green-main) !important;
   color: #101812 !important;
+}
+
+.swal2-cancel {
+  background-color: rgba(201, 107, 90, 0.85) !important;
 }
 
 @media (max-width: 768px) {
@@ -373,5 +434,59 @@ h1 {
 
   .delete-btn {
     grid-column: 1 / -1;
+  }
+
+  .history-actions {
+    justify-content: stretch;
+  }
+
+  .history-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Countdown ja ylitetyn määräajan tyylit */
+.countdown-badge {
+  color: #101812;
+  font-weight: 800;
+}
+
+.countdown-active {
+  background-color: #9db88a;
+}
+
+.countdown-overdue {
+  background-color: #d66f5f;
+  color: #101812;
+  animation: overduePulse 1.4s infinite;
+}
+
+.task-item.overdue:not(.completed) {
+  border-color: rgba(214, 111, 95, 0.55);
+  border-left-color: #d66f5f;
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(214, 111, 95, 0.18),
+    0 0 22px rgba(214, 111, 95, 0.12);
+}
+
+.task-item.overdue:not(.completed) .task-title::after {
+  content: "  ⚠ Aika ylitetty";
+  color: #ffb1a6;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+@keyframes overduePulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.04);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }

@@ -43,7 +43,7 @@
               type="text"
               id="taskInput"
               class="form-control"
-              placeholder="Kirjoita uusi tehtävä. Esim pyykit, kauppalista, työtehtävä"
+              placeholder="Kirjoita uusi tehtävä. Esim. pyykit, kauppalista tai työtehtävä"
               required
             />
           </div>
@@ -89,15 +89,19 @@
       <div class="row g-3 align-items-center">
         <div class="col-md-8">
           <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">Kaikki</button>
-            <button class="filter-btn" data-filter="active">Kesken</button>
-            <button class="filter-btn" data-filter="completed">Valmiit</button>
-            <button class="filter-btn" data-filter="high">Tärkeät</button>
+            <button type="button" class="filter-btn active" data-filter="all">Kaikki</button>
+            <button type="button" class="filter-btn" data-filter="active">Kesken</button>
+            <button type="button" class="filter-btn" data-filter="completed">Valmiit</button>
+            <button type="button" class="filter-btn" data-filter="high">Tärkeät</button>
           </div>
         </div>
 
-        <div class="col-md-4 text-md-end">
-          <button id="clearCompletedBtn" class="btn clear-btn">
+        <div class="col-md-4 text-md-end history-actions">
+          <button type="button" id="showHistoryBtn" class="btn history-btn">
+            Tehtävähistoria
+          </button>
+
+          <button type="button" id="clearCompletedBtn" class="btn clear-btn">
             Poista valmiit
           </button>
         </div>
