@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Smart To-Do</title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Animate.css -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+
+  <!-- Oma CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <div class="nature-overlay"></div>
+
+  <main class="container app-container">
+    <section class="hero-section text-center">
+      <p class="small-title">Smart productivity app</p>
+      <h1>Smart To-Do</h1>
+      <p class="hero-text">
+        Hallitse tehtäviä, määräaikoja ja muistutuksia.
+      </p>
+    </section>
+
+    <section class="todo-card">
+      <form id="taskForm">
+        <div class="row g-3">
+          <div class="col-12">
+            <label for="taskInput" class="form-label">Tehtävä</label>
+            <input
+              type="text"
+              id="taskInput"
+              class="form-control"
+              placeholder="Kirjoita uusi tehtävä. Esim pyykit, kauppalista, työtehtävä"
+              required
+            />
+          </div>
+
+          <div class="col-md-4">
+            <label for="taskDate" class="form-label">Päivämäärä</label>
+            <input type="date" id="taskDate" class="form-control" />
+          </div>
+
+          <div class="col-md-4">
+            <label for="taskTime" class="form-label">Kellonaika</label>
+            <input type="time" id="taskTime" class="form-control" />
+          </div>
+
+          <div class="col-md-4">
+            <label for="taskPriority" class="form-label">Prioriteetti</label>
+            <select id="taskPriority" class="form-select">
+              <option value="low">Matala</option>
+              <option value="normal" selected>Normaali</option>
+              <option value="high">Korkea</option>
+            </select>
+          </div>
+
+          <div class="col-md-8">
+            <label for="taskSound" class="form-label">Muistutusääni</label>
+            <select id="taskSound" class="form-select">
+              <option value="soft">Pehmeä ilmoitus</option>
+              <option value="forest">Luontoääni</option>
+              <option value="alarm">Hälytys</option>
+            </select>
+          </div>
+
+          <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn add-btn w-100">
+              Lisää tehtävä
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="control-card">
+      <div class="row g-3 align-items-center">
+        <div class="col-md-8">
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Kaikki</button>
+            <button class="filter-btn" data-filter="active">Kesken</button>
+            <button class="filter-btn" data-filter="completed">Valmiit</button>
+            <button class="filter-btn" data-filter="high">Tärkeät</button>
+          </div>
+        </div>
+
+        <div class="col-md-4 text-md-end">
+          <button id="clearCompletedBtn" class="btn clear-btn">
+            Poista valmiit
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-section">
+      <div class="stat-box">
+        <span id="totalTasks">0</span>
+        <p>Tehtävää</p>
+      </div>
+
+      <div class="stat-box">
+        <span id="activeTasks">0</span>
+        <p>Kesken</p>
+      </div>
+
+      <div class="stat-box">
+        <span id="completedTasks">0</span>
+        <p>Valmiina</p>
+      </div>
+    </section>
+
+    <section class="tasks-section">
+      <ul id="taskList" class="task-list"></ul>
+
+      <div id="emptyState" class="empty-state">
+        <h2>Ei tehtäviä</h2>
+        <p>Lisää ensimmäinen tehtävä.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Day.js -->
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Howler.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+
+  <!-- Oma JavaScript -->
+  <script src="js/script.js"></script>
+</body>
+</html>
