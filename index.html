@@ -67,7 +67,7 @@
             </select>
           </div>
 
-          <div class="col-md-8">
+          <div class="col-md-5">
             <label for="taskSound" class="form-label">Muistutusääni</label>
             <select id="taskSound" class="form-select">
               <option value="soft">Pehmeä ilmoitus</option>
@@ -76,7 +76,18 @@
             </select>
           </div>
 
-          <div class="col-md-4 d-flex align-items-end">
+          <div class="col-md-4">
+            <label for="taskCategory" class="form-label">Kategoria</label>
+            <select id="taskCategory" class="form-select"></select>
+          </div>
+
+          <div class="col-md-3 d-flex align-items-end">
+            <button type="button" id="manageCategoriesBtn" class="btn category-btn w-100">
+              Kategoriat
+            </button>
+          </div>
+
+          <div class="col-12">
             <button type="submit" class="btn add-btn w-100">
               Lisää tehtävä
             </button>
@@ -93,6 +104,11 @@
             <button type="button" class="filter-btn" data-filter="active">Kesken</button>
             <button type="button" class="filter-btn" data-filter="completed">Valmiit</button>
             <button type="button" class="filter-btn" data-filter="high">Tärkeät</button>
+          </div>
+
+          <div class="category-filter-box">
+            <label for="categoryFilter" class="category-filter-label">Suodata kategorialla</label>
+            <select id="categoryFilter" class="form-select category-filter-select"></select>
           </div>
         </div>
 
