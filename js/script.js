@@ -1,6 +1,7 @@
 $(document).ready(function () {
   let tasks = loadTasks();
   let currentFilter = "all";
+  const activeReminderTaskIds = new Set();
 
   const sounds = {
     soft: new Howl({
@@ -21,6 +22,7 @@ $(document).ready(function () {
 
   renderTasks();
   updateStats();
+  updateCountdowns();
 
   $("#taskForm").on("submit", function (event) {
     event.preventDefault();
@@ -57,6 +59,7 @@ $(document).ready(function () {
     saveTasks();
     renderTasks();
     updateStats();
+    updateCountdowns();
 
     $("#taskForm")[0].reset();
     $("#taskPriority").val("normal");
@@ -80,7 +83,9 @@ $(document).ready(function () {
         task.completedAt = task.completed ? dayjs().format("YYYY-MM-DD HH:mm") : null;
 
         if (task.completed) {
+          activeReminderTaskIds.delete(task.id);
           stopAllSounds();
+          Swal.close();
         }
       }
 
@@ -90,6 +95,7 @@ $(document).ready(function () {
     saveTasks();
     renderTasks();
     updateStats();
+    updateCountdowns();
   });
 
   $(document).on("click", ".delete-btn", function () {
@@ -108,10 +114,12 @@ $(document).ready(function () {
           return task.id !== taskId;
         });
 
+        activeReminderTaskIds.delete(taskId);
         stopAllSounds();
         saveTasks();
         renderTasks();
         updateStats();
+        updateCountdowns();
 
         Swal.fire({
           icon: "success",
@@ -129,6 +137,7 @@ $(document).ready(function () {
 
     currentFilter = $(this).data("filter");
     renderTasks();
+    updateCountdowns();
   });
 
   $("#showHistoryBtn").on("click", function () {
@@ -166,6 +175,7 @@ $(document).ready(function () {
         saveTasks();
         renderTasks();
         updateStats();
+        updateCountdowns();
       }
     });
   });
@@ -186,18 +196,18 @@ $(document).ready(function () {
       const priorityText = getPriorityText(task.priority);
       const priorityClass = getPriorityClass(task.priority);
       const dateBadge = getDateBadge(task);
-      const countdownInfo = getCountdownInfo(task);
+      const countdownBadge = getCountdownBadge(task);
+      const isOverdue = isTaskOverdue(task);
+      const overdueLabel = isOverdue && !task.completed
+        ? `<span class="overdue-label">⚠ Aika ylitetty</span>`
+        : "";
       const remindedBadge = task.reminded
         ? `<span class="badge-custom badge-reminded">Muistutettu</span>`
         : "";
 
-      const countdownBadge = countdownInfo.visible
-        ? `<span class="badge-custom countdown-badge ${countdownInfo.className}" data-countdown-id="${task.id}">${countdownInfo.text}</span>`
-        : "";
-
       const taskItem = `
         <li
-          class="task-item priority-${task.priority} ${task.completed ? "completed" : ""} ${countdownInfo.isOverdue ? "overdue" : ""} animate__animated animate__fadeInUp"
+          class="task-item priority-${task.priority} ${task.completed ? "completed" : ""} ${isOverdue && !task.completed ? "overdue" : ""} animate__animated animate__fadeInUp"
           data-id="${task.id}"
         >
           <input
@@ -208,7 +218,7 @@ $(document).ready(function () {
           />
 
           <div class="task-content">
-            <h3 class="task-title">${escapeHtml(task.text)}</h3>
+            <h3 class="task-title">${escapeHtml(task.text)} ${overdueLabel}</h3>
 
             <div class="task-meta">
               ${dateBadge}
@@ -262,101 +272,12 @@ $(document).ready(function () {
     return `<span class="badge-custom badge-date">${dateText}</span>`;
   }
 
-  function getTaskDeadline(task) {
-    if (!task.date) {
-      return null;
+  function getCountdownBadge(task) {
+    if (!task.date || !task.time || task.completed) {
+      return "";
     }
 
-    if (task.time) {
-      return dayjs(`${task.date} ${task.time}`);
-    }
-
-    // Jos kellonaikaa ei ole annettu, määräpäivän rajaksi asetetaan päivän loppu.
-    return dayjs(`${task.date} 23:59:59`);
-  }
-
-  function getCountdownInfo(task) {
-    const deadline = getTaskDeadline(task);
-
-    if (!deadline || task.completed) {
-      return {
-        visible: false,
-        text: "",
-        className: "",
-        isOverdue: false
-      };
-    }
-
-    const now = dayjs();
-    const diffMs = deadline.diff(now);
-    const isOverdue = diffMs < 0;
-    const absMs = Math.abs(diffMs);
-
-    return {
-      visible: true,
-      text: isOverdue
-        ? `Aika ylitetty ${formatDuration(absMs)}`
-        : `Jäljellä ${formatDuration(absMs)}`,
-      className: isOverdue ? "countdown-overdue" : "countdown-active",
-      isOverdue: isOverdue
-    };
-  }
-
-  function formatDuration(milliseconds) {
-    const totalSeconds = Math.floor(milliseconds / 1000);
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    if (days > 0) {
-      return `${days} pv ${hours} h ${minutes} min`;
-    }
-
-    if (hours > 0) {
-      return `${hours} h ${minutes} min ${seconds} s`;
-    }
-
-    if (minutes > 0) {
-      return `${minutes} min ${seconds} s`;
-    }
-
-    return `${seconds} s`;
-  }
-
-  function updateCountdownBadges() {
-    let shouldRerender = false;
-
-    tasks.forEach(function (task) {
-      const countdownInfo = getCountdownInfo(task);
-      const badge = $(`[data-countdown-id="${task.id}"]`);
-      const taskItem = $(`.task-item[data-id="${task.id}"]`);
-
-      if (!countdownInfo.visible) {
-        return;
-      }
-
-      badge
-        .text(countdownInfo.text)
-        .removeClass("countdown-active countdown-overdue")
-        .addClass(countdownInfo.className);
-
-      if (countdownInfo.isOverdue) {
-        taskItem.addClass("overdue");
-      } else {
-        taskItem.removeClass("overdue");
-      }
-
-      // Jos tehtävä menee juuri yli ajan, renderöidään kerran uudelleen, jotta varoitus näkyy varmasti.
-      if (countdownInfo.isOverdue && !taskItem.hasClass("overdue-rendered")) {
-        taskItem.addClass("overdue-rendered");
-        shouldRerender = true;
-      }
-    });
-
-    if (shouldRerender) {
-      renderTasks();
-    }
+    return `<span class="badge-custom badge-countdown" data-task-id="${task.id}">Lasketaan aikaa...</span>`;
   }
 
   function getPriorityText(priority) {
@@ -417,7 +338,7 @@ $(document).ready(function () {
         : "Ei määräaikaa";
 
       const completedText = task.completedAt
-        ? dayjs(task.completedAt).format("DD.MM.YYYY HH:mm")
+        ? formatStoredDate(task.completedAt)
         : "Ei tietoa";
 
       historyHtml += `
@@ -443,20 +364,27 @@ $(document).ready(function () {
 
   function checkReminders() {
     const now = dayjs();
+    let taskWasUpdated = false;
 
     tasks.forEach(function (task) {
+      if (!task.date || !task.time || task.completed || task.reminded) {
+        return;
+      }
+
+      if (activeReminderTaskIds.has(task.id)) {
+        return;
+      }
+
       const reminderTime = getTaskDeadline(task);
 
-      if (!reminderTime || task.completed || task.reminded) {
+      if (!reminderTime.isValid()) {
         return;
       }
 
       if (now.isAfter(reminderTime) || now.isSame(reminderTime)) {
         task.reminded = true;
-
-        saveTasks();
-        renderTasks();
-        updateStats();
+        taskWasUpdated = true;
+        activeReminderTaskIds.add(task.id);
 
         playReminderSound(task.sound);
 
@@ -466,14 +394,104 @@ $(document).ready(function () {
           html: `
             <strong>${escapeHtml(task.text)}</strong>
             <br><br>
-            Tehtävän määräaika on nyt tai se on jo ylittynyt.
+            Tehtävän määräaika on nyt.
           `,
           confirmButtonText: "Selvä"
         }).then(function () {
+          activeReminderTaskIds.delete(task.id);
           stopAllSounds();
         });
       }
     });
+
+    if (taskWasUpdated) {
+      saveTasks();
+      renderTasks();
+      updateStats();
+      updateCountdowns();
+    }
+  }
+
+  function updateCountdowns() {
+    const now = dayjs();
+
+    $(".badge-countdown").each(function () {
+      const taskId = Number($(this).data("task-id"));
+      const task = tasks.find(function (item) {
+        return item.id === taskId;
+      });
+
+      if (!task || task.completed || !task.date || !task.time) {
+        $(this).remove();
+        return;
+      }
+
+      const deadline = getTaskDeadline(task);
+
+      if (!deadline.isValid()) {
+        $(this).text("Virheellinen aika");
+        return;
+      }
+
+      const differenceMs = deadline.valueOf() - now.valueOf();
+      const formattedTime = formatTimeDifference(Math.abs(differenceMs));
+      const taskElement = $(this).closest(".task-item");
+      const taskTitle = taskElement.find(".task-title");
+
+      if (differenceMs < 0) {
+        $(this)
+          .text(`Aika ylitetty ${formattedTime}`)
+          .addClass("badge-overdue");
+
+        taskElement.addClass("overdue");
+
+        if (taskTitle.find(".overdue-label").length === 0) {
+          taskTitle.append(` <span class="overdue-label">⚠ Aika ylitetty</span>`);
+        }
+      } else {
+        $(this)
+          .text(`Jäljellä ${formattedTime}`)
+          .removeClass("badge-overdue");
+
+        taskElement.removeClass("overdue");
+        taskTitle.find(".overdue-label").remove();
+      }
+    });
+  }
+
+  function formatTimeDifference(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (days > 0) {
+      return `${days} pv ${hours} h ${minutes} min`;
+    }
+
+    if (hours > 0) {
+      return `${hours} h ${minutes} min ${seconds} s`;
+    }
+
+    if (minutes > 0) {
+      return `${minutes} min ${seconds} s`;
+    }
+
+    return `${seconds} s`;
+  }
+
+  function isTaskOverdue(task) {
+    if (!task.date || !task.time || task.completed) {
+      return false;
+    }
+
+    const deadline = getTaskDeadline(task);
+    return deadline.isValid() && dayjs().isAfter(deadline);
+  }
+
+  function getTaskDeadline(task) {
+    return dayjs(`${task.date}T${task.time}`);
   }
 
   function playReminderSound(soundName) {
@@ -499,7 +517,25 @@ $(document).ready(function () {
   function loadTasks() {
     try {
       const savedTasks = JSON.parse(localStorage.getItem("smartTodoTasks"));
-      return Array.isArray(savedTasks) ? savedTasks : [];
+
+      if (!Array.isArray(savedTasks)) {
+        return [];
+      }
+
+      return savedTasks.map(function (task) {
+        return {
+          id: task.id || Date.now(),
+          text: task.text || "Nimetön tehtävä",
+          date: task.date || "",
+          time: task.time || "",
+          priority: task.priority || "normal",
+          sound: task.sound || "soft",
+          completed: Boolean(task.completed),
+          reminded: Boolean(task.reminded),
+          createdAt: task.createdAt || dayjs().format("YYYY-MM-DD HH:mm"),
+          completedAt: task.completedAt || null
+        };
+      });
     } catch (error) {
       console.error("Tehtävien lataaminen epäonnistui:", error);
       return [];
@@ -520,10 +556,10 @@ $(document).ready(function () {
   }
 
   setInterval(function () {
-    updateCountdownBadges();
-  }, 1000);
-
-  setInterval(function () {
     checkReminders();
   }, 10000);
+
+  setInterval(function () {
+    updateCountdowns();
+  }, 1000);
 });

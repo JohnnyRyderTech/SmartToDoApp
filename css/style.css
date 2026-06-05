@@ -445,48 +445,29 @@ h1 {
   }
 }
 
-/* Countdown ja ylitetyn määräajan tyylit */
-.countdown-badge {
+/* Countdown ja yliaikamerkinnät */
+.badge-countdown {
+  background-color: rgba(214, 169, 79, 0.95);
   color: #101812;
-  font-weight: 800;
 }
 
-.countdown-active {
-  background-color: #9db88a;
-}
-
-.countdown-overdue {
-  background-color: #d66f5f;
+.badge-overdue {
+  background-color: var(--priority-high);
   color: #101812;
-  animation: overduePulse 1.4s infinite;
 }
 
 .task-item.overdue:not(.completed) {
-  border-color: rgba(214, 111, 95, 0.55);
-  border-left-color: #d66f5f;
-  box-shadow:
-    0 12px 26px rgba(0, 0, 0, 0.28),
-    0 0 0 1px rgba(214, 111, 95, 0.18),
-    0 0 22px rgba(214, 111, 95, 0.12);
+  border-color: rgba(201, 107, 90, 0.55);
+  border-left-color: var(--priority-high);
+  box-shadow: 0 0 0 1px rgba(201, 107, 90, 0.25), 0 16px 34px rgba(0, 0, 0, 0.34);
 }
 
-.task-item.overdue:not(.completed) .task-title::after {
-  content: "  ⚠ Aika ylitetty";
-  color: #ffb1a6;
+.overdue-label {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  color: #f0b4a8;
   font-size: 0.82rem;
   font-weight: 800;
-}
-
-@keyframes overduePulse {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.04);
-  }
-
-  100% {
-    transform: scale(1);
-  }
+  white-space: nowrap;
 }
