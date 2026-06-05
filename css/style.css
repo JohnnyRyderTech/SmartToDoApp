@@ -83,6 +83,53 @@ h1 {
   text-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
 }
 
+
+/* Otsikkojen ja käyttöliittymän symbolit */
+.title-symbol,
+.main-title-symbol,
+.label-symbol,
+.stat-symbol,
+.empty-symbol,
+.task-title-symbol,
+.subtask-title-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.35));
+}
+
+.main-title-symbol {
+  margin-right: 12px;
+  font-size: 0.82em;
+  vertical-align: 0.03em;
+}
+
+.title-symbol {
+  margin-right: 8px;
+}
+
+.label-symbol {
+  width: 1.35em;
+}
+
+.stat-symbol {
+  margin-right: 4px;
+}
+
+.empty-symbol {
+  margin-right: 8px;
+}
+
+.task-title-symbol {
+  margin-right: 8px;
+  font-size: 0.95em;
+}
+
+.subtask-title-symbol {
+  margin-right: 6px;
+}
+
 .hero-text {
   max-width: 620px;
   margin: 12px auto 0;

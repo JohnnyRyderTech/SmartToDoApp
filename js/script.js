@@ -12,8 +12,8 @@ $(document).ready(function () {
     }),
 
     forest: new Howl({
-      src: ["https://assets.mixkit.co/active_storage/sfx/2515/2515-preview.mp3"],
-      volume: 0.5
+      src: ["https://assets.mixkit.co/active_storage/sfx/2472/2472-preview.mp3"],
+      volume: 0.45
     }),
 
     alarm: new Howl({
@@ -41,7 +41,7 @@ $(document).ready(function () {
     if (taskText === "") {
       Swal.fire({
         icon: "warning",
-        title: "Tehtävä puuttuu",
+        title: "📝 Tehtävä puuttuu",
         text: "Kirjoita ensin tehtävän nimi."
       });
       return;
@@ -75,7 +75,7 @@ $(document).ready(function () {
 
     Swal.fire({
       icon: "success",
-      title: "Tehtävä lisätty",
+      title: "✅ Tehtävä lisätty",
       text: "Uusi tehtävä tallennettiin listaan.",
       timer: 1400,
       showConfirmButton: false
@@ -116,7 +116,7 @@ $(document).ready(function () {
     if (subtaskText === "") {
       Swal.fire({
         icon: "warning",
-        title: "Alakohta puuttuu",
+        title: "🧩 Alakohta puuttuu",
         text: "Kirjoita ensin alakohta."
       });
       return;
@@ -193,7 +193,7 @@ $(document).ready(function () {
 
     Swal.fire({
       icon: "question",
-      title: "Poistetaanko tehtävä?",
+      title: "🗑️ Poistetaanko tehtävä?",
       text: "Tätä toimintoa ei voi perua.",
       showCancelButton: true,
       confirmButtonText: "Poista",
@@ -213,7 +213,7 @@ $(document).ready(function () {
 
         Swal.fire({
           icon: "success",
-          title: "Poistettu",
+          title: "🗑️ Poistettu",
           timer: 1000,
           showConfirmButton: false
         });
@@ -252,7 +252,7 @@ $(document).ready(function () {
     if (completedCount === 0) {
       Swal.fire({
         icon: "info",
-        title: "Ei poistettavia tehtäviä",
+        title: "🍃 Ei poistettavia tehtäviä",
         text: "Listalla ei ole valmiiksi merkittyjä tehtäviä."
       });
       return;
@@ -260,7 +260,7 @@ $(document).ready(function () {
 
     Swal.fire({
       icon: "question",
-      title: "Poistetaanko valmiit tehtävät?",
+      title: "🧹 Poistetaanko valmiit tehtävät?",
       text: `Valmiita tehtäviä on ${completedCount}.`,
       showCancelButton: true,
       confirmButtonText: "Poista",
@@ -296,6 +296,7 @@ $(document).ready(function () {
       task.subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
 
       const priorityText = getPriorityText(task.priority);
+      const priorityIcon = getPriorityIcon(task.priority);
       const priorityClass = getPriorityClass(task.priority);
       const dateBadge = getDateBadge(task);
       const countdownBadge = getCountdownBadge(task);
@@ -326,12 +327,12 @@ $(document).ready(function () {
           />
 
           <div class="task-content">
-            <h3 class="task-title">${escapeHtml(task.text)} ${overdueLabel}</h3>
+            <h3 class="task-title"><span class="task-title-symbol">${getTaskIcon(task)}</span>${escapeHtml(task.text)} ${overdueLabel}</h3>
 
             <div class="task-meta">
               ${dateBadge}
               ${countdownBadge}
-              <span class="badge-custom ${priorityClass}">${priorityText}</span>
+              <span class="badge-custom ${priorityClass}">${priorityIcon} ${priorityText}</span>
               ${categoryBadge}
               ${subtaskBadge}
               ${remindedBadge}
@@ -339,7 +340,7 @@ $(document).ready(function () {
 
             <div class="subtasks-box">
               <div class="subtasks-header">
-                <span>Alakohdat</span>
+                <span><span class="subtask-title-symbol">🧩</span>Alakohdat</span>
                 <span>${getSubtaskProgressText(task)}</span>
               </div>
 
@@ -397,7 +398,7 @@ $(document).ready(function () {
 
   function getDateBadge(task) {
     if (!task.date) {
-      return `<span class="badge-custom badge-date">Ei määräaikaa</span>`;
+      return `<span class="badge-custom badge-date">📅 Ei määräaikaa</span>`;
     }
 
     let dateText = dayjs(task.date).format("DD.MM.YYYY");
@@ -406,7 +407,7 @@ $(document).ready(function () {
       dateText += ` klo ${task.time}`;
     }
 
-    return `<span class="badge-custom badge-date">${dateText}</span>`;
+    return `<span class="badge-custom badge-date">📅 ${dateText}</span>`;
   }
 
   function getCountdownBadge(task) {
@@ -414,7 +415,7 @@ $(document).ready(function () {
       return "";
     }
 
-    return `<span class="badge-custom badge-countdown" data-task-id="${task.id}">Lasketaan aikaa...</span>`;
+    return `<span class="badge-custom badge-countdown" data-task-id="${task.id}">⏱️ Lasketaan aikaa...</span>`;
   }
 
   function getSubtaskBadge(task) {
@@ -428,7 +429,7 @@ $(document).ready(function () {
       return subtask.completed;
     }).length;
 
-    return `<span class="badge-custom badge-subtasks">Alakohdat ${completedCount}/${subtasks.length}</span>`;
+    return `<span class="badge-custom badge-subtasks">🧩 Alakohdat ${completedCount}/${subtasks.length}</span>`;
   }
 
 
@@ -437,7 +438,7 @@ $(document).ready(function () {
       return "";
     }
 
-    return `<span class="badge-custom badge-category" style="background-color: ${category.color};">${escapeHtml(category.name)}</span>`;
+    return `<span class="badge-custom badge-category" style="background-color: ${category.color};">🏷️ ${escapeHtml(category.name)}</span>`;
   }
 
   function getCategoryStyle(category) {
@@ -502,6 +503,34 @@ $(document).ready(function () {
     return "Normaali";
   }
 
+  function getPriorityIcon(priority) {
+    if (priority === "low") {
+      return "🌱";
+    }
+
+    if (priority === "high") {
+      return "🔥";
+    }
+
+    return "🪵";
+  }
+
+  function getTaskIcon(task) {
+    if (task.completed) {
+      return "✅";
+    }
+
+    if (isTaskOverdue(task)) {
+      return "⚠️";
+    }
+
+    if (task.categoryId) {
+      return "🏷️";
+    }
+
+    return "🍂";
+  }
+
   function getPriorityClass(priority) {
     if (priority === "low") {
       return "badge-low";
@@ -534,7 +563,7 @@ $(document).ready(function () {
     if (completedTasks.length === 0) {
       Swal.fire({
         icon: "info",
-        title: "Tehtävähistoria on tyhjä",
+        title: "📜 Tehtävähistoria on tyhjä",
         text: "Et ole vielä merkinnyt yhtään tehtävää valmiiksi."
       });
       return;
@@ -574,7 +603,7 @@ $(document).ready(function () {
     historyHtml += `</div>`;
 
     Swal.fire({
-      title: "Valmiiden tehtävien historia",
+      title: "📜 Valmiiden tehtävien historia",
       html: historyHtml,
       width: "700px",
       confirmButtonText: "Sulje"
@@ -609,7 +638,7 @@ $(document).ready(function () {
 
         Swal.fire({
           icon: "info",
-          title: "Muistutus",
+          title: "🔔 Muistutus",
           html: `
             <strong>${escapeHtml(task.text)}</strong>
             <br><br>
@@ -659,7 +688,7 @@ $(document).ready(function () {
 
       if (differenceMs < 0) {
         $(this)
-          .text(`Aika ylitetty ${formattedTime}`)
+          .text(`⚠ Aika ylitetty ${formattedTime}`)
           .addClass("badge-overdue");
 
         taskElement.addClass("overdue");
@@ -669,7 +698,7 @@ $(document).ready(function () {
         }
       } else {
         $(this)
-          .text(`Jäljellä ${formattedTime}`)
+          .text(`⏱️ Jäljellä ${formattedTime}`)
           .removeClass("badge-overdue");
 
         taskElement.removeClass("overdue");
@@ -807,7 +836,7 @@ $(document).ready(function () {
 
   function showCategoryManager() {
     Swal.fire({
-      title: "Omat kategoriat",
+      title: "🏷️ Omat kategoriat",
       html: getCategoryManagerHtml(),
       width: "760px",
       showCancelButton: true,
@@ -852,7 +881,7 @@ $(document).ready(function () {
       if (result.isConfirmed) {
         Swal.fire({
           icon: "success",
-          title: "Kategoria lisätty",
+          title: "✅ Kategoria lisätty",
           timer: 1100,
           showConfirmButton: false
         });
@@ -915,7 +944,7 @@ $(document).ready(function () {
 
       Swal.fire({
         icon: "warning",
-        title: "Poistetaanko kategoria?",
+        title: "🏷️ Poistetaanko kategoria?",
         text: `Kategoria "${category.name}" poistetaan tehtävistä, mutta tehtävät säilyvät.`,
         showCancelButton: true,
         confirmButtonText: "Poista",
@@ -952,7 +981,7 @@ $(document).ready(function () {
 
         Swal.fire({
           icon: "success",
-          title: "Kategoria poistettu",
+          title: "🗑️ Kategoria poistettu",
           timer: 1000,
           showConfirmButton: false
         });
