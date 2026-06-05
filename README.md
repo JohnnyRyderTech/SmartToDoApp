@@ -17,8 +17,9 @@ Epäselväksi jäi, no eipä oikein mikään. Noiden API pintojen kanssa kikkail
 Antaisin itselleni pisteitä seuraavasti: 9/10p
 
 ## Palaute opettajalle kurssista sekä itse opetuksesta tähän saakka
-Kurssi sekä lähiopetus ovat tuntuneet. Niin lähiopetustahan meillä ei ollut. Mutta koin kyllä, että kurssi oli oikein opettavainen! Lisäksi koin, että tukiopetusta ja apua oli saatavilla riittävästi.
-Oppimistani tukisi jos olisi enemmän ehkä vielä täsmällisempää opetusta erilaisiin toimintoihin ja niiden etsimiseen. Mutta ymmärrettävästi se vaatisi enemmän kurssitunteja.
+Kurssi sekä lähiopetus ovat tuntuneet. 
+Niin lähiopetustahan meillä ei ollut. Mutta koin kyllä, että kurssi oli oikein opettavainen! Lisäksi koin, että tukiopetusta ja apua oli saatavilla riittävästi niin haluttaessa ja tarvittaessa.
+Oppimistani tukisi enemmän jos olisi enemmän ehkä vielä täsmällisempää opetusta erilaisiin toimintoihin ja niiden etsimiseen. Mutta ymmärrettävästi se vaatisi enemmän kurssitunteja.
 
 
 ## Sisällysluettelo:
@@ -36,7 +37,7 @@ Oppimistani tukisi jos olisi enemmän ehkä vielä täsmällisempää opetusta e
 Smart To-Do App on sovellus, joka on monipuolinen, mutta kuitenkin sopivan yksinkertainen sovellus muistuttamaan tehtävistä ja määräajoista ja toimii myös muistilistana.
 
 ## Tunnetut virheet/bugit
-Toistaiseksi olen heittänyt kavereilleni testi-ajoon sovellusta ja olen heidän avullaan löytänyt ja korjannut löydetyt bugit.
+Olen heittänyt kavereilleni ja tuttavilleni testattavaksi sovellusta ja olen heidän avullaan löytänyt ja korjannut sitten löydetyt bugit.
 
 ## Kuvakaappaukset
 Lisää tähän vähintään yksi kuvakaappaus toimivasta sovelluksesta  
@@ -46,32 +47,30 @@ Kuva: [Kelly Sikkema](https://unsplash.com/@kellysikkema)
 
 ## Teknologiat
 Projektissa käytettiin seuraavia teknologioita:
-HTML – sovelluksen rakenteen luomiseen. HTMLä rakennettiin tehtävien lisäyslomake, tehtävälista, kategoriavalinnat, tehtävähistoria, alatehtävät ja motivaatiolauseen näyttävä osio.
-CSS – sovelluksen ulkoasun toteuttamiseen. CSSä tehtiin tumma, maanläheinen ja luontomainen värimaailma sekä responsiivinen asettelu eri näytöille.
-JavaScript – sovelluksen toiminnallisuuden toteuttamiseen. JavaScriptillä hallitaan tehtävien lisääminen, poistaminen, kuittaaminen, alatehtävät, kategoriat, muistutukset, countdown-laskuri ja localStorage-tallennus.
-jQuery – DOM-elementtien käsittelyyn ja tapahtumankuuntelijoihin. jQueryä käytettiin esimerkiksi lomakkeen lähetyksen, painikkeiden klikkausten, tehtävälistan päivittämisen ja käyttöliittymän dynaamisen muokkaamisen toteuttamiseen.
-Axios – AJAX-kutsujen tekemiseen. Sovelluksessa Axiosia käytetään satunnaisen motivaatiolauseen hakemiseen ulkoisesta rajapinnasta sovelluksen alaosaan.
-Bootstrap – responsiivisen ulkoasun ja valmiiden käyttöliittymäkomponenttien hyödyntämiseen. Bootstrap helpotti lomakkeiden, painikkeiden ja sivun asettelun rakentamista.
-Day.js – päivämäärien ja kellonaikojen käsittelyyn. Sitä käytettiin tehtävien määräaikojen, muistutusten ja countdown-laskurin toteuttamisessa.
-SweetAlert2 – visuaalisiin ilmoitusikkunoihin. Sitä käytettiin esimerkiksi muistutuksissa, poistovahvistuksissa ja käyttäjälle näytettävissä ilmoituksissa.
-Howler.js – muistutusäänien toistamiseen. Sovelluksessa käyttäjä voi valita eri muistutusääniä, kuten pehmeän ilmoitusäänen, lintujen laulun tai hälytysäänen.
-Animate.css – kevyisiin animaatioihin. Sitä käytettiin esimerkiksi tehtävien ilmestymiseen listalle.
-localStorage – tehtävien, alatehtävien ja kategorioiden tallentamiseen selaimeen. Tämän ansiosta tiedot säilyvät, vaikka sivu päivitetään tai selain suljetaan.
+- HTML – sovelluksen rakenteen luomiseen. HTMLä rakennettiin tehtävien lisäyslomake, tehtävälista, kategoriavalinnat, tehtävähistoria, alatehtävät ja motivaatiolauseen näyttävä osio.
+- CSS – sovelluksen ulkoasun toteuttamiseen. CSSä tehtiin tumma, maanläheinen ja luontomainen värimaailma sekä responsiivinen asettelu eri näytöille.
+- JavaScript – sovelluksen toiminnallisuuden toteuttamiseen. JavaScriptillä hallitaan tehtävien lisääminen, poistaminen, kuittaaminen, alatehtävät, kategoriat, muistutukset, countdown-laskuri ja localStorage-tallennus.
+- jQuery – DOM-elementtien käsittelyyn ja tapahtumankuuntelijoihin. jQueryä käytettiin esimerkiksi lomakkeen lähetyksen, painikkeiden klikkausten, tehtävälistan päivittämisen ja käyttöliittymän dynaamisen muokkaamisen toteuttamiseen.
+- Axios – AJAX-kutsujen tekemiseen. Sovelluksessa Axiosia käytetään satunnaisen motivaatiolauseen hakemiseen ulkoisesta rajapinnasta sovelluksen alaosaan.
+- Bootstrap – responsiivisen ulkoasun ja valmiiden käyttöliittymäkomponenttien hyödyntämiseen. Bootstrap helpotti lomakkeiden, painikkeiden ja sivun asettelun rakentamista.
+- Day.js – päivämäärien ja kellonaikojen käsittelyyn. Sitä käytettiin tehtävien määräaikojen, muistutusten ja countdown-laskurin toteuttamisessa.
+- SweetAlert2 – visuaalisiin ilmoitusikkunoihin. Sitä käytettiin esimerkiksi muistutuksissa, poistovahvistuksissa ja käyttäjälle näytettävissä ilmoituksissa.
+- Howler.js – muistutusäänien toistamiseen. Sovelluksessa käyttäjä voi valita eri muistutusääniä, kuten pehmeän ilmoitusäänen, lintujen laulun tai hälytysäänen.
+- Animate.css – kevyisiin animaatioihin. Sitä käytettiin esimerkiksi tehtävien ilmestymiseen listalle.
+- localStorage – tehtävien, alatehtävien ja kategorioiden tallentamiseen selaimeen. Tämän ansiosta tiedot säilyvät, vaikka sivu päivitetään tai selain suljetaan.
 
 
 ## Asennus
 Sovellus on julkaistu Netlify-palvelussa, joten sitä voi käyttää suoraan selaimessa ilman erillistä asennusta.
 
 Käyttö selaimessa:
-
-Avaa sovelluksen Netlify-osoite selaimessa.
-Sovellus käynnistyy automaattisesti.
-Sovellusta voi käyttää heti ilman kirjautumista tai erillisiä asennuksia.
+- Avaa sovelluksen Netlify-osoite selaimessa.
+- Sovellus käynnistyy automaattisesti.
+- Sovellusta voi käyttää heti ilman kirjautumista tai erillisiä asennuksia.
 
 Vaihtoehtoisesti sovelluksen voi avata paikallisesti omalla koneella:
-
-Lataa tai kloonaa repositorio GitHubista.
-Varmista, että kansiorakenne on seuraavanlainen:
+- Lataa tai kloonaa repositorio GitHubista.
+- Varmista, että kansiorakenne on seuraavanlainen:
 project-folder/
 ├── index.html
 ├── css/
@@ -79,7 +78,7 @@ project-folder/
 ├── js/
 │   └── script.js
 └── images/
-Avaa index.html selaimessa.
+- Avaa index.html selaimessa.
 
 Sovellus ei vaadi erillistä backend-palvelinta tai npm-asennuksia, koska käytetyt ulkoiset kirjastot ladataan CDN-linkkien kautta. Sovelluksen tiedot tallentuvat selaimen localStorageen, joten tehtävät säilyvät samalla selaimella myös sivun päivittämisen jälkeen.
 
@@ -101,6 +100,6 @@ Lähteitä en käyttänyt tähän projektiin muuta kuin jumppasin ChatGPT:tä k�
 Isot kiitokset lähipiirille, ystäville ja tutuille jotka antoivat palautetta ja testasivat sovellusta bugien varalta.
 
 ## Lisenssi
-Valitse projektille lisenssi seuraamalla tätä [opasta](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository).
-
-Esimerkki: MIT-lisenssi @ [tekijä](author.com)
+Tämä projekti on julkaistu MIT-lisenssillä.
+Voit käyttää, muokata ja jakaa projektia vapaasti, kunhan alkuperäinen lisenssiteksti ja tekijätiedot säilytetään mukana.
+MIT-lisenssi @ Johnny Kuoppala
