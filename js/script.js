@@ -27,6 +27,7 @@ $(document).ready(function () {
   renderTasks();
   updateStats();
   updateCountdowns();
+  fetchMotivationQuote();
 
   $("#taskForm").on("submit", function (event) {
     event.preventDefault();
@@ -242,6 +243,10 @@ $(document).ready(function () {
     currentCategoryFilter = $(this).val();
     renderTasks();
     updateCountdowns();
+  });
+
+  $("#refreshQuoteBtn").on("click", function () {
+    fetchMotivationQuote();
   });
 
   $("#clearCompletedBtn").on("click", function () {
@@ -553,6 +558,44 @@ $(document).ready(function () {
     $("#totalTasks").text(total);
     $("#activeTasks").text(active);
     $("#completedTasks").text(completed);
+  }
+
+  function fetchMotivationQuote() {
+    const quoteText = $("#quoteText");
+    const quoteAuthor = $("#quoteAuthor");
+    const refreshButton = $("#refreshQuoteBtn");
+
+    if (typeof axios === "undefined") {
+      quoteText.text("Axios-kirjastoa ei voitu ladata. Tarkista internet-yhteys tai CDN-linkki.");
+      quoteAuthor.text("");
+      return;
+    }
+
+    refreshButton.prop("disabled", true).text("⏳ Haetaan...");
+    quoteText.text("Haetaan inspiraatiolausetta...");
+    quoteAuthor.text("");
+
+    axios.get("https://dummyjson.com/quotes/random")
+      .then(function (response) {
+        const quote = response.data && response.data.quote
+          ? response.data.quote
+          : "Small steps every day lead to big results.";
+
+        const author = response.data && response.data.author
+          ? response.data.author
+          : "Tuntematon";
+
+        quoteText.text(`“${quote}”`);
+        quoteAuthor.text(`— ${author}`);
+      })
+      .catch(function (error) {
+        console.error("Motivaatiolauseen hakeminen epäonnistui:", error);
+        quoteText.text("Motivaatiolauseen hakeminen ei onnistunut. Yritä hetken päästä uudelleen.");
+        quoteAuthor.text("");
+      })
+      .finally(function () {
+        refreshButton.prop("disabled", false).text("🔄 Hae uusi");
+      });
   }
 
   function showTaskHistory() {

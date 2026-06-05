@@ -71,7 +71,7 @@
             <label for="taskSound" class="form-label"><span class="label-symbol">🔔</span> Muistutusääni</label>
             <select id="taskSound" class="form-select">
               <option value="soft">Pehmeä ilmoitus</option>
-              <option value="forest">Luontoääni</option>
+              <option value="forest">Lintujen laulu</option>
               <option value="alarm">Hälytys</option>
             </select>
           </div>
@@ -149,6 +149,27 @@
         <p>Lisää ensimmäinen tehtävä ja aloita rauhallisesti.</p>
       </div>
     </section>
+
+    <section class="motivation-card">
+      <div class="motivation-header">
+        <div>
+          <p class="small-title motivation-small-title">✨ Päivän inspiraatio</p>
+          <h2>🌻 Motivaatiovinkki</h2>
+        </div>
+
+        <button type="button" id="refreshQuoteBtn" class="btn quote-btn">
+          🔄 Hae uusi
+        </button>
+      </div>
+
+      <blockquote id="quoteText" class="quote-text">
+        Haetaan inspiraatiolausetta...
+      </blockquote>
+
+      <p id="quoteAuthor" class="quote-author"></p>
+      <p class="quote-source-text">
+      </p>
+    </section>
   </main>
 
   <!-- jQuery -->
@@ -165,6 +186,9 @@
 
   <!-- Howler.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
   <!-- Oma JavaScript -->
   <script src="js/script.js"></script>
