@@ -40,10 +40,8 @@ Smart To-Do App on sovellus, joka on monipuolinen, mutta kuitenkin sopivan yksin
 Olen heittänyt kavereilleni ja tuttavilleni testattavaksi sovellusta ja olen heidän avullaan löytänyt ja korjannut sitten löydetyt bugit.
 
 ## Kuvakaappaukset
-Lisää tähän vähintään yksi kuvakaappaus toimivasta sovelluksesta  
-`![Kirjoittaminen](https://unsplash.com/photos/VBPzRgd7gfc)`
-
-Kuva: [Kelly Sikkema](https://unsplash.com/@kellysikkema)
+Kuvakaappaus toimivasta sovelluksesta.  
+https://drive.google.com/file/d/1lHKtw63Wi42BCmDPieNUmWG4oGJ7tzpU/view?usp=sharing
 
 ## Teknologiat
 Projektissa käytettiin seuraavia teknologioita:
@@ -102,4 +100,4 @@ Isot kiitokset lähipiirille, ystäville ja tutuille jotka antoivat palautetta j
 ## Lisenssi
 Tämä projekti on julkaistu MIT-lisenssillä.
 Voit käyttää, muokata ja jakaa projektia vapaasti, kunhan alkuperäinen lisenssiteksti ja tekijätiedot säilytetään mukana.
-MIT-lisenssi @ Johnny Kuoppala
+MIT-lisenssi 2026 @ Johnny Kuoppala
