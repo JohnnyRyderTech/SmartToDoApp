@@ -3,7 +3,7 @@ Smart To-Do App by Johnny Kuoppala
 
 ## Verkkolinkit:
 Pääset julkaistuun sovellukseen käsiksi osoitteessa https://smartto-do-app.netlify.app/
-Linkki projektin videoesittelyyn [google.com](https://google.com)
+Linkki projektin videoesittelyyn https://drive.google.com/file/d/1ZNJZl4rn3-FukpMV-Ea7Nd-MaRVub13I/view?usp=sharing
 
 ## Työn jakautuminen 
 Tein sovelluksen itse yksin.
