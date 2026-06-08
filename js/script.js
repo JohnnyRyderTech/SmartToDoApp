@@ -1,10 +1,16 @@
 $(document).ready(function () {
+  // Ladataan aiemmin tallennetut tehtävät localStoragesta.
   let tasks = loadTasks();
+  // Ladataan käyttäjän itse luomat kategoriat localStoragesta.
   let categories = loadCategories();
+  // Nykyinen tehtäväsuodatin: kaikki, kesken, valmiit tai tärkeät.
   let currentFilter = "all";
+  // Nykyinen kategoriasuodatin.
   let currentCategoryFilter = "all";
+  // Aktiiviset muistutukset estävät saman muistutuksen avautumisen monta kertaa.
   const activeReminderTaskIds = new Set();
 
+  // Howler.js-äänet muistutuksia varten.
   const sounds = {
     soft: new Howl({
       src: ["https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"],
@@ -22,6 +28,7 @@ $(document).ready(function () {
     })
   };
 
+  // Alustetaan käyttöliittymä, kun sivu on latautunut.
   renderCategoryOptions();
   renderCategoryFilterOptions();
   renderTasks();
@@ -29,6 +36,11 @@ $(document).ready(function () {
   updateCountdowns();
   fetchMotivationQuote();
 
+  /*
+    Uuden tehtävän lisääminen
+    Kun käyttäjä lähettää lomakkeen, luodaan uusi tehtäväolio,
+    tallennetaan se taulukkoon ja päivitetään näkymä.
+  */
   $("#taskForm").on("submit", function (event) {
     event.preventDefault();
 
@@ -83,6 +95,11 @@ $(document).ready(function () {
     });
   });
 
+  /*
+    Päätehtävän valmiiksi merkitseminen.
+    Kun tehtävä kuitataan valmiiksi, tallennetaan valmistumisaika.
+    Jos tehtävällä soi muistutusääni, se pysäytetään.
+  */
   $(document).on("change", ".task-check", function () {
     const taskId = Number($(this).closest(".task-item").data("id"));
 
@@ -107,6 +124,11 @@ $(document).ready(function () {
     updateCountdowns();
   });
 
+  /*
+    Alakohdan lisääminen tehtävälle.
+    Käyttäjä voi lisätä yhden päätehtävän alle useita pienempiä alakohtia,
+    esimerkiksi ostoslistan tuotteita.
+  */
   $(document).on("submit", ".subtask-form", function (event) {
     event.preventDefault();
 
@@ -144,6 +166,7 @@ $(document).ready(function () {
     updateCountdowns();
   });
 
+  // Alakohdan valmiiksi merkitseminen.
   $(document).on("change", ".subtask-check", function () {
     const taskId = Number($(this).closest(".task-item").data("id"));
     const subtaskId = Number($(this).closest(".subtask-item").data("subtask-id"));
@@ -169,6 +192,7 @@ $(document).ready(function () {
     updateCountdowns();
   });
 
+  // Yksittäisen alakohdan poistaminen.
   $(document).on("click", ".subtask-delete-btn", function () {
     const taskId = Number($(this).closest(".task-item").data("id"));
     const subtaskId = Number($(this).closest(".subtask-item").data("subtask-id"));
@@ -189,6 +213,7 @@ $(document).ready(function () {
     updateCountdowns();
   });
 
+  // Päätehtävän poistaminen vahvistusikkunan kautta.
   $(document).on("click", ".delete-btn", function () {
     const taskId = Number($(this).closest(".task-item").data("id"));
 
@@ -222,6 +247,7 @@ $(document).ready(function () {
     });
   });
 
+  // Tehtävien suodatus painikkeilla: kaikki, kesken, valmiit ja tärkeät.
   $(".filter-btn").on("click", function () {
     $(".filter-btn").removeClass("active");
     $(this).addClass("active");
@@ -231,24 +257,29 @@ $(document).ready(function () {
     updateCountdowns();
   });
 
+  // Avataan tehtävähistoria, jossa näytetään valmiiksi merkityt tehtävät.
   $("#showHistoryBtn").on("click", function () {
     showTaskHistory();
   });
 
+  // Avataan omien kategorioiden hallinta.
   $("#manageCategoriesBtn").on("click", function () {
     showCategoryManager();
   });
 
+  // Kategoriasuodatin päivittää listan valitun kategorian mukaan.
   $("#categoryFilter").on("change", function () {
     currentCategoryFilter = $(this).val();
     renderTasks();
     updateCountdowns();
   });
 
+  // Haetaan uusi motivaatiolause Axiosin avulla.
   $("#refreshQuoteBtn").on("click", function () {
     fetchMotivationQuote();
   });
 
+  // Poistetaan kaikki valmiiksi merkityt tehtävät kerralla.
   $("#clearCompletedBtn").on("click", function () {
     const completedCount = tasks.filter(function (task) {
       return task.completed;
@@ -285,6 +316,11 @@ $(document).ready(function () {
     });
   });
 
+  /*
+    Tehtävälistan piirtäminen.
+    Tämä funktio tyhjentää nykyisen listan ja rakentaa HTML:n uudelleen
+    suodatettujen tehtävien perusteella.
+  */
   function renderTasks() {
     $("#taskList").empty();
 
@@ -371,6 +407,7 @@ $(document).ready(function () {
     });
   }
 
+  // Palauttaa tehtävät nykyisen suodattimen ja kategoriasuodattimen perusteella.
   function getFilteredTasks() {
     let filteredTasks = tasks;
 
@@ -401,6 +438,7 @@ $(document).ready(function () {
     return filteredTasks;
   }
 
+  // Luo tehtäväkorttiin päivämäärämerkin.
   function getDateBadge(task) {
     if (!task.date) {
       return `<span class="badge-custom badge-date">📅 Ei määräaikaa</span>`;
@@ -415,6 +453,7 @@ $(document).ready(function () {
     return `<span class="badge-custom badge-date">📅 ${dateText}</span>`;
   }
 
+  // Luo countdown-merkin, jos tehtävällä on päivämäärä ja kellonaika.
   function getCountdownBadge(task) {
     if (!task.date || !task.time || task.completed) {
       return "";
@@ -423,6 +462,7 @@ $(document).ready(function () {
     return `<span class="badge-custom badge-countdown" data-task-id="${task.id}">⏱️ Lasketaan aikaa...</span>`;
   }
 
+  // Näyttää alakohtien etenemisen badge-merkkinä, esimerkiksi 2/5.
   function getSubtaskBadge(task) {
     const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
 
@@ -438,6 +478,7 @@ $(document).ready(function () {
   }
 
 
+  // Luo kategoriabadgen käyttäjän valitsemalla värillä.
   function getCategoryBadge(category) {
     if (!category) {
       return "";
@@ -446,6 +487,7 @@ $(document).ready(function () {
     return `<span class="badge-custom badge-category" style="background-color: ${category.color};">🏷️ ${escapeHtml(category.name)}</span>`;
   }
 
+  // Palauttaa tehtäväkortille CSS-muuttujat kategorian värin perusteella.
   function getCategoryStyle(category) {
     if (!category) {
       return "";
@@ -454,6 +496,7 @@ $(document).ready(function () {
     return `--category-color: ${category.color}; --category-bg: ${hexToRgba(category.color, 0.14)};`;
   }
 
+  // Teksti alakohtien edistymisestä alakohdat-osion otsikkoon.
   function getSubtaskProgressText(task) {
     const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
 
@@ -468,6 +511,7 @@ $(document).ready(function () {
     return `${completedCount}/${subtasks.length} valmiina`;
   }
 
+  // Rakentaa tehtävän alakohtien HTML-listan.
   function getSubtasksHtml(task) {
     const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
 
@@ -496,6 +540,7 @@ $(document).ready(function () {
     return html;
   }
 
+  // Muuttaa prioriteetin teknisen arvon käyttäjälle näkyväksi tekstiksi.
   function getPriorityText(priority) {
     if (priority === "low") {
       return "Matala";
@@ -508,6 +553,7 @@ $(document).ready(function () {
     return "Normaali";
   }
 
+  // Palauttaa prioriteettiin sopivan symbolin.
   function getPriorityIcon(priority) {
     if (priority === "low") {
       return "🌱";
@@ -520,6 +566,7 @@ $(document).ready(function () {
     return "🪵";
   }
 
+  // Valitsee tehtävän otsikon symbolin tilanteen mukaan.
   function getTaskIcon(task) {
     if (task.completed) {
       return "✅";
@@ -536,6 +583,7 @@ $(document).ready(function () {
     return "🍂";
   }
 
+  // Palauttaa prioriteettiin sopivan CSS-luokan.
   function getPriorityClass(priority) {
     if (priority === "low") {
       return "badge-low";
@@ -548,6 +596,7 @@ $(document).ready(function () {
     return "badge-normal";
   }
 
+  // Päivittää tehtävien tilastot: yhteensä, kesken ja valmiina.
   function updateStats() {
     const total = tasks.length;
     const completed = tasks.filter(function (task) {
@@ -560,6 +609,10 @@ $(document).ready(function () {
     $("#completedTasks").text(completed);
   }
 
+  /*
+    Motivaatiolauseen hakeminen Axiosilla.
+    Axios tekee GET-pyynnön ulkoiseen rajapintaan ja näyttää vastauksena saadun lainauksen.
+  */
   function fetchMotivationQuote() {
     const quoteText = $("#quoteText");
     const quoteAuthor = $("#quoteAuthor");
@@ -598,6 +651,7 @@ $(document).ready(function () {
       });
   }
 
+  // Näyttää SweetAlert2-ikkunassa valmiiksi merkityt tehtävät.
   function showTaskHistory() {
     const completedTasks = tasks.filter(function (task) {
       return task.completed;
@@ -653,6 +707,11 @@ $(document).ready(function () {
     });
   }
 
+  /*
+    Muistutusten tarkistaminen.
+    Tätä funktiota ajetaan ajastimella. Jos tehtävän määräaika on saavutettu,
+    näytetään muistutus ja soitetaan käyttäjän valitsema ääni.
+  */
   function checkReminders() {
     const now = dayjs();
     let taskWasUpdated = false;
@@ -703,6 +762,11 @@ $(document).ready(function () {
     }
   }
 
+  /*
+    Countdown-laskurin päivitys.
+    Päivittää jokaisen näkyvän tehtävän jäljellä olevan ajan kerran sekunnissa.
+    Jos määräaika on mennyt yli, näytetään yliaikamerkintä.
+  */
   function updateCountdowns() {
     const now = dayjs();
 
@@ -750,6 +814,7 @@ $(document).ready(function () {
     });
   }
 
+  // Muuttaa millisekunnit luettavaan muotoon, tyylillä "2 h 15 min 3 s".
   function formatTimeDifference(milliseconds) {
     const totalSeconds = Math.floor(milliseconds / 1000);
     const days = Math.floor(totalSeconds / 86400);
@@ -772,6 +837,7 @@ $(document).ready(function () {
     return `${seconds} s`;
   }
 
+  // Tarkistaa, onko tehtävän määräaika mennyt yli.
   function isTaskOverdue(task) {
     if (!task.date || !task.time || task.completed) {
       return false;
@@ -781,10 +847,12 @@ $(document).ready(function () {
     return deadline.isValid() && dayjs().isAfter(deadline);
   }
 
+  // Muodostaa tehtävän päivämäärästä ja kellonajasta Day.js-aikaolion.
   function getTaskDeadline(task) {
     return dayjs(`${task.date}T${task.time}`);
   }
 
+  // Soittaa valitun muistutusäänen. Ensin pysäytetään mahdolliset aiemmat äänet.
   function playReminderSound(soundName) {
     stopAllSounds();
 
@@ -795,16 +863,23 @@ $(document).ready(function () {
     }
   }
 
+  // Pysäyttää kaikki Howler.js:llä käynnistetyt muistutusäänet.
   function stopAllSounds() {
     Object.values(sounds).forEach(function (sound) {
       sound.stop();
     });
   }
 
+  // Tallentaa tehtävät selaimen localStorageen.
   function saveTasks() {
     localStorage.setItem("smartTodoTasks", JSON.stringify(tasks));
   }
 
+  /*
+    Tehtävien lataaminen localStoragesta.
+    Sisältää varmistuksia, jotta vanhat tai puutteelliset tallenteet
+    eivät riko sovellusta.
+  */
   function loadTasks() {
     try {
       const savedTasks = JSON.parse(localStorage.getItem("smartTodoTasks"));
@@ -847,6 +922,7 @@ $(document).ready(function () {
 
 
 
+  // Päivittää tehtävän lisäyslomakkeen kategoriavalikon.
   function renderCategoryOptions() {
     const categorySelect = $("#taskCategory");
     categorySelect.empty();
@@ -857,6 +933,7 @@ $(document).ready(function () {
     });
   }
 
+  // Päivittää kategoriasuodattimen vaihtoehdot.
   function renderCategoryFilterOptions() {
     const categoryFilter = $("#categoryFilter");
     const selectedValue = categoryFilter.val() || currentCategoryFilter;
@@ -877,6 +954,11 @@ $(document).ready(function () {
     }
   }
 
+  /*
+    Kategorioiden hallinta.
+    Avaa SweetAlert2-ikkunan, jossa käyttäjä voi luoda uuden kategorian
+    ja valita sille oman värin.
+  */
   function showCategoryManager() {
     Swal.fire({
       title: "🏷️ Omat kategoriat",
@@ -932,6 +1014,7 @@ $(document).ready(function () {
     });
   }
 
+  // Rakentaa kategorioiden hallintaikkunan HTML-sisällön.
   function getCategoryManagerHtml() {
     let html = `
       <div class="category-manager">
@@ -974,6 +1057,7 @@ $(document).ready(function () {
     return html;
   }
 
+  // Liittää kategorioiden hallintaikkunan painikkeisiin tapahtumat.
   function bindCategoryManagerEvents() {
     $(document).off("click", ".category-delete-btn");
 
@@ -1032,6 +1116,7 @@ $(document).ready(function () {
     });
   }
 
+  // Etsii kategorian sen id:n perusteella.
   function getCategoryById(categoryId) {
     if (!categoryId) {
       return null;
@@ -1042,10 +1127,12 @@ $(document).ready(function () {
     }) || null;
   }
 
+  // Tallentaa kategoriat localStorageen.
   function saveCategories() {
     localStorage.setItem("smartTodoCategories", JSON.stringify(categories));
   }
 
+  // Lataa kategoriat localStoragesta ja varmistaa niiden oikean rakenteen.
   function loadCategories() {
     try {
       const savedCategories = JSON.parse(localStorage.getItem("smartTodoCategories"));
@@ -1071,6 +1158,7 @@ $(document).ready(function () {
     }
   }
 
+  // Tarkistaa, että väri on oikeassa HEX-muodossa. Muuten palautetaan oletusväri.
   function normalizeHexColor(color) {
     if (typeof color === "string" && /^#[0-9A-Fa-f]{6}$/.test(color)) {
       return color;
@@ -1079,6 +1167,7 @@ $(document).ready(function () {
     return "#8fa876";
   }
 
+  // Muuntaa HEX-värin rgba-muotoon läpinäkyviä taustoja varten.
   function hexToRgba(hex, alpha) {
     const normalizedHex = normalizeHexColor(hex).replace("#", "");
     const red = parseInt(normalizedHex.substring(0, 2), 16);
@@ -1088,6 +1177,7 @@ $(document).ready(function () {
     return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
   }
 
+  // Muotoilee tallennetun päivämäärän käyttäjälle luettavaan muotoon.
   function formatStoredDate(value) {
     if (!value) {
       return "Ei tietoa";
@@ -1097,14 +1187,17 @@ $(document).ready(function () {
     return parsedDate.isValid() ? parsedDate.format("DD.MM.YYYY HH:mm") : value;
   }
 
+  // Estää HTML-koodin suorittamisen käyttäjän syötteissä.
   function escapeHtml(text) {
     return $("<div>").text(text).html();
   }
 
+  // Tarkistetaan muistutukset 10 sekunnin välein.
   setInterval(function () {
     checkReminders();
   }, 10000);
 
+  // Päivitetään countdown-laskurit sekunnin välein.
   setInterval(function () {
     updateCountdowns();
   }, 1000);
